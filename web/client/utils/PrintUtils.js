@@ -136,6 +136,23 @@ export const normalizeUrl = (input) => {
     return PrintUtils.toAbsoluteURL(result);
 };
 /**
+ * Get query parameters from a URL.
+ * @param {string|array} input Original URL
+ * @returns {object} an object of query parameters, or empty object
+ * @memberof utils.PrintUtils
+ */
+export const getQueryParams = (input) => {
+    let urlStr = isArray(input) ? input[0] : input;
+    let url = new URL(urlStr);
+    let result = {};
+    if (url.search !== '') {
+        for (const [key, value] of url.searchParams) {
+            result[key] = value;
+        }
+    }
+    return result;
+};
+/**
  * Find the layout name for the given options.
  * The convention is: `PAGE_FORMAT + ("_2_pages_legend"|"_2_pages_legend"|"") + ("_landscape"|"")``
  * @param  {object} spec the spec with the options
@@ -489,6 +506,9 @@ export const specCreators = {
                 if (!validURL) {
                     throw Error("No base URL found for this layer");
                 }
+                // Extract query parameters from URL.
+                const queryParams = PrintUtils.getQueryParams(validURL);
+                validURL = PrintUtils.normalizeUrl(validURL);
                 // transform in xyz format for mapfish-print.
                 const firstBracketIndex = validURL.indexOf('{');
                 const baseURL = validURL.slice(0, firstBracketIndex);
@@ -501,6 +521,7 @@ export const specCreators = {
                 return {
                     baseURL,
                     path_format: pathFormat,
+                    customParams: queryParams,
                     "type": 'xyz',
                     "extension": validURL.split('.').pop() || "png",
                     "opacity": getOpacity(layer),

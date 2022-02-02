@@ -1095,6 +1095,7 @@ PrintUtils = {
     getMapfishLayersSpecification,
     specCreators,
     normalizeUrl,
+    getQueryParams,
     toOpenLayers2Style,
     toOpenLayers2TextStyle,
     getWMTSMatrixIds,

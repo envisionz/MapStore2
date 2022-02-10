@@ -803,6 +803,19 @@ export default {
             }
         }
     },
+    LINZ_Basemaps:
+    {
+        url: "https://basemaps.linz.govt.nz/v1/tiles/{variant}/{tilematrixset}/{z}/{x}/{y}.{format}?api={apiKey}",
+        options: {
+            attribution: '© <a href="//www.linz.govt.nz/linz-copyright">LINZ CC BY 4.0</a> © <a href="//www.linz.govt.nz/data/linz-data/linz-basemaps/data-attribution">Imagery Basemap contributors</a>',
+            apiKey: '<insert your LINZ Basemaps API Key here>',
+            variant: 'aerial',
+            format: "png",
+            tilematrixset: 'EPSG:3857',
+            maxZoom: 22,
+            maxNativeZoom: 22
+        }
+    },
     PDOK: {
         url: 'https://geodata.nationaalgeoregister.nl/tiles/service/wmts?layer={variant}&tilematrixset=EPSG:3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
         options: {

@@ -43,6 +43,6 @@ jobs:
       - name: Release WAR
         uses: softprops/action-gh-release@v1
         with:
-          files: mapstore.war
+          files: ./product/target/mapstore.war
           draft: true
           name: "${{ github.ref_name }}"

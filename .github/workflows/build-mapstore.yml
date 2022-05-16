@@ -19,9 +19,13 @@ jobs:
         with:
           node-version: 14
       
-      - run: npm install
+      - name: Install frontend dependencies
+        run: npm install
 
-      - run: npm compile
+      - name: Compile frontend
+        env:
+            NODE_OPTIONS: "--max-old-space-size=7168"
+        run: npm compile
 
       - uses: actions/setup-java@v3
         with:

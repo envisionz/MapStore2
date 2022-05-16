@@ -34,7 +34,7 @@ jobs:
 
       - name: Package frontend
         working-directory: ./web/client
-        run: zip -r dist frontend-dist.zip
+        run: zip -r frontend-dist.zip dist
 
       - uses: actions/upload-artifact@v3
         with:

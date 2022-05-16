@@ -1,0 +1,63 @@
+name: Build Mapstore2 Frontent
+on:
+  push:
+    branches:
+      - "20*envisionz"
+      - "!2021*"
+    tags:
+      - "rel-*-envisionz"
+
+jobs:
+  build-mapstore2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Enable source maps
+        run: |
+          sed -i -e "s/devtool: !prod ? 'eval' : undefined/devtool: 'source-map'/g" build/buildConfig.js
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      
+      - name: Install frontend dependencies
+        run: |
+          npm install
+          npm install
+
+      - name: Compile frontend
+        env:
+            NODE_OPTIONS: "--max-old-space-size=7168"
+        run: npm run compile
+
+      - name: Package frontend without source maps
+        working-directory: ./web/client
+        run: zip -r frontend-dist.zip dist -x \*.js.map -x \*.css.map
+
+      - name: Package source maps
+        working-directory: ./web/client
+        run: zip -r frontend-source-maps.zip dist -i \*.js.map -i \*.css.map
+
+      - name: Upload frontend
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-dist
+          path: ./web/client/frontend-dist.zip
+
+      - name: Upload source maps
+        uses: actions/upload-artifact@v3
+        with:
+          name: source-maps
+          path: ./web/client/frontend-source-maps.zip
+   
+      - name: Release frontend ZIP
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ./web/client/frontend-dist.zip
+            ./web/client/frontend-source-maps.zip
+          draft: true
+          name: "${{ github.ref_name }}"

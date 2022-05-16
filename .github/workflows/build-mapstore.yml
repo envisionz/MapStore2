@@ -37,10 +37,10 @@ jobs:
       
       - name: Compile backend
         working-directory: ./java
-        run: mvn clean install
+        run: mvn clean install -Dmapstore2.version=${{ github.ref_name }}
       
       - name: Build release WAR
-        run: mvn clean install
+        run: mvn clean install -Dmapstore2.version=${{ github.ref_name }}
 
       - name: Release WAR
         uses: softprops/action-gh-release@v1

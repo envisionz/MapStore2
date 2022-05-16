@@ -2,7 +2,8 @@ name: Build Mapstore2 (with frontend source map)
 on:
   push:
     branches:
-      - 2-20*
+      - "20*envisionz"
+      - "!2021*"
 
 jobs:
   build-mapstore2:

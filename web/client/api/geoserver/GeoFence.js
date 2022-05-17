@@ -20,7 +20,7 @@ import UserService from './geofence/UserService';
  */
 const USER_SERVICES = {
     geofence: UserService,
-    geoserve: UserService
+    geoserver: UserService
 };
 
 const RULE_SERVICES = {

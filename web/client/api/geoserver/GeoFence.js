@@ -11,6 +11,7 @@ import assign from 'object-assign';
 
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
+import SecurityUtils from '../../utils/SecurityUtils';
 import CatalogAPI from '../CSW';
 import RuleService from './geofence/RuleService';
 import UserService from './geofence/UserService';
@@ -159,13 +160,33 @@ var Api = {
     // returns the user service name (for GeoServer user name autocomplete that points to specific servic (i.e. geostore))
     getUserServiceName: () => ConfigUtils.getDefaults().geoserverUserServiceName,
 
+    getAuthkeyForUrl(url) {
+        if (!SecurityUtils.isAuthenticationActivated()) {
+            return {};
+        }
+        if (url && SecurityUtils.getAuthenticationMethod(url) === 'authkey') {
+            const token = SecurityUtils.getToken();
+            const authParam = getAuthKeyParameter(url);
+            if (authParam && token) {
+                return {[authParam]: token};
+            }
+        }
+        return {};
+    },
+
     addBaseUrl: function(options = {}) {
+        const baseurl = ConfigUtils.getDefaults().geoFenceUrl + ( ConfigUtils.getDefaults().geoFencePath || 'geofence/rest' )
         return assign(options, {
-            baseURL: ConfigUtils.getDefaults().geoFenceUrl + ( ConfigUtils.getDefaults().geoFencePath || 'geofence/rest' )});
+            baseURL: baseurl, 
+            params: Api.getAuthkeyForUrl(baseurl)
+        });
     },
     addBaseUrlGS: function(options = {}) {
-        const {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
-        return assign(options, {baseURL});
+        const {url: baseurl} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+        return assign(options, {
+            baseURL: baseurl,
+            params: Api.getAuthkeyForUrl(baseurl)
+        });
     }
 };
 

@@ -11,7 +11,6 @@ import assign from 'object-assign';
 
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
-import SecurityUtils from '../../utils/SecurityUtils';
 import CatalogAPI from '../CSW';
 import RuleService from './geofence/RuleService';
 import UserService from './geofence/UserService';
@@ -47,7 +46,7 @@ const LAYER_SERVICES = {
                     'Accept': 'application/json'
                 }
             }))
-                .then(response => get(response, 'layers.layer'))
+                .then(response => get(response, 'data.layers.layer'))
                 .then((layers = []) => castArray(layers))
                 .then(layers => layers.filter(l => !workspace || l && l.name && l.name.indexOf(`${workspace}:`) === 0))
                 .then(layers => ({
@@ -160,33 +159,13 @@ var Api = {
     // returns the user service name (for GeoServer user name autocomplete that points to specific servic (i.e. geostore))
     getUserServiceName: () => ConfigUtils.getDefaults().geoserverUserServiceName,
 
-    getAuthkeyForUrl(url) {
-        if (!SecurityUtils.isAuthenticationActivated()) {
-            return {};
-        }
-        if (url && SecurityUtils.getAuthenticationMethod(url) === 'authkey') {
-            const token = SecurityUtils.getToken();
-            const authParam = SecurityUtils.getAuthKeyParameter(url);
-            if (authParam && token) {
-                return {[authParam]: token};
-            }
-        }
-        return {};
-    },
-
     addBaseUrl: function(options = {}) {
-        const baseurl = ConfigUtils.getDefaults().geoFenceUrl + ( ConfigUtils.getDefaults().geoFencePath || 'geofence/rest' )
         return assign(options, {
-            baseURL: baseurl, 
-            params: Api.getAuthkeyForUrl(baseurl)
-        });
+            baseURL: ConfigUtils.getDefaults().geoFenceUrl + ( ConfigUtils.getDefaults().geoFencePath || 'geofence/rest' )});
     },
     addBaseUrlGS: function(options = {}) {
-        const {url: baseurl} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
-        return assign(options, {
-            baseURL: baseurl,
-            params: Api.getAuthkeyForUrl(baseurl)
-        });
+        const {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+        return assign(options, {baseURL});
     }
 };
 

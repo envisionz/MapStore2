@@ -46,7 +46,7 @@ const LAYER_SERVICES = {
                     'Accept': 'application/json'
                 }
             }))
-                .then(response => get(response, 'data.layers.layer'))
+                .then(response => get(response, 'layers.layer'))
                 .then((layers = []) => castArray(layers))
                 .then(layers => layers.filter(l => !workspace || l && l.name && l.name.indexOf(`${workspace}:`) === 0))
                 .then(layers => ({

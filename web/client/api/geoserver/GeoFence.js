@@ -166,7 +166,7 @@ var Api = {
         }
         if (url && SecurityUtils.getAuthenticationMethod(url) === 'authkey') {
             const token = SecurityUtils.getToken();
-            const authParam = getAuthKeyParameter(url);
+            const authParam = SecurityUtils.getAuthKeyParameter(url);
             if (authParam && token) {
                 return {[authParam]: token};
             }

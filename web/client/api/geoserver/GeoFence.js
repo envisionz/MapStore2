@@ -12,20 +12,22 @@ import assign from 'object-assign';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import CatalogAPI from '../CSW';
-import RuleService from './geofence/RuleService';
-import UserService from './geofence/UserService';
+import gsRuleService from './geofence/RuleService';
+import gsUserService from './geofence/UserService';
+import RuleService from '../geofence/RuleService';
+import UserService from '../geofence/UserService';
 
 /**
  * Services to retrieve users and groups (roles)
  */
 const USER_SERVICES = {
     geofence: UserService,
-    geoserver: UserService
+    geoserver: gsUserService
 };
 
 const RULE_SERVICES = {
     geofence: RuleService,
-    geoserver: RuleService
+    geoserver: gsRuleService
 };
 
 const LAYER_SERVICES = {
